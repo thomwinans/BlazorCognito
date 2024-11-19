@@ -7,8 +7,6 @@
 <RemoteAuthenticatorView Action="@Action">
     <LogOut>
         @{
-            Logger.LogInformation($"Starting logout process. Action: {Action}");
-
             var cognitoDomain = "YOUR-COGNITO-POOL-ID.auth.us-east-2.amazoncognito.com";
             var clientId = "YOUR-COGNITO-APP-CLIENT-ID";
             var returnUrl = Uri.EscapeDataString("https://localhost:7115");
@@ -18,8 +16,6 @@
             var cognitoLogoutUrl = $"https://{cognitoDomain}/logout" +
                 $"?client_id={clientId}" +
                 $"&logout_uri={returnUrl}";
-
-            // Logger.LogInformation($"Redirecting to logout URL: {cognitoLogoutUrl}");
 
             NavigationManager.NavigateTo(cognitoLogoutUrl, true);
         }
