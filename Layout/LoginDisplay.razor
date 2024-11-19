@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<AuthorizeView>
+    <Authorized>
+        @{
+            var userIdentifier = GetUserIdentifier(context);
+        }
+        Hello, @userIdentifier!
+        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+    </Authorized>
+    <NotAuthorized>
+        <a href="authentication/login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private string GetUserIdentifier(AuthenticationState context)
+    {
+        // Try email first
+        var email = context.User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+        if (!string.IsNullOrEmpty(email))
+            return email;
+
+        // Try cognito:username
+        var cognitoUsername = context.User.Claims.FirstOrDefault(c => c.Type == "cognito:username")?.Value;
+        if (!string.IsNullOrEmpty(cognitoUsername))
+            return cognitoUsername;
+
+        // Try name claim
+        var name = context.User.Identity?.Name;
+        if (!string.IsNullOrEmpty(name))
+            return name;
+
+        // Fallback
+        return "User";
+    }
+
+    private async Task BeginSignOut()
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+
+    private void PrintClaims(AuthenticationState context)
+    {
+        foreach (var claim in context.User.Claims.OrderBy(c => c.Type))
+        {
+            Console.WriteLine($"{claim.Type}: {claim.Value}");
+        }
+    }
+}

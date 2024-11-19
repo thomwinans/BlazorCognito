@@ -1,0 +1,31 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject ILogger<Authentication> Logger
+@inject NavigationManager NavigationManager
+@inject IAccessTokenProvider TokenProvider
+
+<RemoteAuthenticatorView Action="@Action">
+    <LogOut>
+        @{
+            Logger.LogInformation($"Starting logout process. Action: {Action}");
+
+            var cognitoDomain = "surveyiq-20241111.auth.us-east-2.amazoncognito.com";
+            var clientId = "5upstgcj3oo6p4his2chdo2tsn";
+            var returnUrl = Uri.EscapeDataString("https://localhost:7115");
+
+            // Use the hosted UI domain with /logout endpoint
+
+            var cognitoLogoutUrl = $"https://{cognitoDomain}/logout" +
+                $"?client_id={clientId}" +
+                $"&logout_uri={returnUrl}";
+
+            // Logger.LogInformation($"Redirecting to logout URL: {cognitoLogoutUrl}");
+
+            NavigationManager.NavigateTo(cognitoLogoutUrl, true);
+        }
+    </LogOut>
+</RemoteAuthenticatorView>
+
+@code {
+    [Parameter] public string? Action { get; set; }
+}
