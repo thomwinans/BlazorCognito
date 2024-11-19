@@ -9,8 +9,8 @@
         @{
             Logger.LogInformation($"Starting logout process. Action: {Action}");
 
-            var cognitoDomain = "surveyiq-20241111.auth.us-east-2.amazoncognito.com";
-            var clientId = "5upstgcj3oo6p4his2chdo2tsn";
+            var cognitoDomain = "YOUR-COGNITO-POOL-ID.auth.us-east-2.amazoncognito.com";
+            var clientId = "YOUR-COGNITO-APP-CLIENT-ID";
             var returnUrl = Uri.EscapeDataString("https://localhost:7115");
 
             // Use the hosted UI domain with /logout endpoint
